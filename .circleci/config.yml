@@ -1,0 +1,21 @@
+version: 2.1
+
+jobs:
+  cli:
+    docker:
+      - image: cimg/go:1.18-node
+    steps:
+      - run:
+          name: test CLI
+          command: |
+            which circleci
+      - checkout
+      - run:
+          name: validate CI config
+          command: |
+            circleci config validate
+
+workflows:
+  main:
+    jobs:
+      - cli
