@@ -1,21 +1,24 @@
 version: 2.1
 
 jobs:
-  cli:
+  insights:
     docker:
-      - image: cimg/go:1.18-node
+      - image: cimg/base:stable
+    resource_class: small
     steps:
       - run:
-          name: test CLI
+          name: ingest Insights API
           command: |
-            which circleci
-      - checkout
+            curl -s -H "circle-token: $CIRCLE_TOKEN" https://circleci.com/api/v2/insights/gh/circleci/orb-service/workflows?reporting-window=last-30-days >> insightdata.json
+            INSIGHT_DATA2=$(jq -c '.[]' insightdata.json)
+            echo $INSIGHT_DATA2
+            echo "export INSIGHT_DATA_SLACK=$INSIGHT_DATA2" >> $BASH_ENV
       - run:
-          name: validate CI config
+          name: check
           command: |
-            circleci config validate
-
+            printenv INSIGHT_DATA_SLACK
+            
 workflows:
   main:
     jobs:
-      - cli
+      - insights
