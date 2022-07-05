@@ -10,7 +10,7 @@ jobs:
           name: ingest Insights API
           command: |
             curl -s -H "circle-token: $CIRCLE_TOKEN" https://circleci.com/api/v2/insights/gh/circleci/orb-service/workflows?reporting-window=last-30-days >> insightdata.json
-            INSIGHT_DATA2=$(jq -c '.[]' insightdata.json)
+            INSIGHT_DATA2=$(jq -c '.items' insightdata.json)
             echo $INSIGHT_DATA2
             echo "export INSIGHT_DATA_SLACK='${INSIGHT_DATA2}'" >> $BASH_ENV
       - run:
