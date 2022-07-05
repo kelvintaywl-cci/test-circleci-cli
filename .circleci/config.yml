@@ -16,7 +16,7 @@ jobs:
       - run:
           name: check
           command: |
-            printenv INSIGHT_DATA_SLACK
+            printenv INSIGHT_DATA_SLACK | jq .
             
 workflows:
   main:
